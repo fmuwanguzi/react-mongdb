@@ -1,39 +1,40 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+
 import axios from 'axios';
+import SingleWorkout from './SingleWorkout'
 
-export default class Workout extends React.Component{
-    state = {
-        loading: true,
-        workout: null,
-    };
+class Workout extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            workouts: []
+        };
+    }
 
-    async componentDidMount(){
-        const url = 'https://general-fit.herokuapp.com/workout'
-        const response = await fetch(url);
-        const data = await response.json();
-        this.setState({workout: data[0] , loading: false })
-        console.log(data[0].name);
 
+    componentDidMount(){
+        const url = 'https://general-fit.herokuapp.com/workouts';
+        axios.get(url)
+        .then((response) => {
+            this.setState({
+                workouts: response.data
+            })
+        })
+        .catch((error)=> console.log(error))
+    }
+
+    renderAll(){
+        return this.state.workouts.map((item)=> (
+            <SingleWorkout key={item.name} item={item}/>
+        ));
     }
 
     render(){
-        return(
-            <div>
-                {/* Will display loading and when it isn't it show a workout */}
-                {this.state.loading || !this.state.workout ? (
-                    <div> loading... </div> 
-                    ) :(  
-                    <div> 
-                        <div> 
-                            {this.state.workout.name}
-                        </div>
-                        <img src={this.state.workout.picture} alt="image"></img>
-                        
-                    </div> )}
-            </div>
-        )
+        return <div>
+            {this.renderAll()}
+                </div>
     }
-
-
 }
+
+export default Workout;
 
