@@ -27,6 +27,8 @@ export default class Workout extends React.Component{
                         <div> 
                             {this.state.workout.name}
                         </div>
+                        <img src={this.state.workout.picture} alt="image"></img>
+                        
                     </div> )}
             </div>
         )
